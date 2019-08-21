@@ -17,7 +17,8 @@ class MoviesContainer extends Component {
         console.log(id);
         try{
             const deleteMovie = await fetch(`http://localhost:9000/api/v1/movies/${id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include"
             });
             const parsedResponse = await deleteMovie.json();
             if(parsedResponse.status.code === 200){
@@ -35,8 +36,9 @@ class MoviesContainer extends Component {
             const newMovie = await fetch("http://localhost:9000/api/v1/movies", {
                 method: "POST",
                 body: JSON.stringify(formData),
+                credentials: "include",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 }
             })
             const parsedResponse = await newMovie.json();
@@ -51,7 +53,9 @@ class MoviesContainer extends Component {
     }
     getMovies = async () => {
         try{
-            const movies = await fetch("http://localhost:9000/api/v1/movies");
+            const movies = await fetch("http://localhost:9000/api/v1/movies", {
+                credentials: "include"
+            });
             const parsedResponse = await movies.json();
             if(parsedResponse.status.code === 200){
                 this.setState({
