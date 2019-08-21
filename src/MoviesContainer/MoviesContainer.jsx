@@ -66,12 +66,37 @@ class MoviesContainer extends Component {
             console.log(err);
         }
     }
+    updateMovie = async (id, formData) => {
+        try{
+            const updatedMovie = await fetch(`http://localhost:9000/api/v1/movies/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(formData),
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const parsedResponse = await updatedMovie.json();
+            console.log(parsedResponse);
+            if(parsedResponse.status.code === 201){
+                // UPDATE STATE WITH THE NEW MOVIE
+                await this.setState({
+                    movies: this.state.movies.map(movie => movie._id !== id ? movie : parsedResponse.data)
+                })
+                return true;
+            }
+            return false;
+        }catch(err){
+            console.log(err);
+            return false;
+        }
+    }
     render(){
         return(
             <div>
                 <h1>Here's the movie container</h1>
                 <NewMovie createMovie={this.createMovie} />
-                <MoviesList movies={this.state.movies} deleteMovie={this.deleteMovie} />
+                <MoviesList movies={this.state.movies} deleteMovie={this.deleteMovie} updateMovie={this.updateMovie}/>
             </div>
         )
     }
